@@ -51,13 +51,15 @@ const Manager = () => {
         }
         setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
         //while editing delete the old password
-        await fetch("http://localhost:3000/", {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: form.id })
-        })
+        if (form.id) {  // Changed from form.ide to form.id
+            await fetch("http://localhost:3000/", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: form.id })
+            })
+        }
         // localStorage.setItem('passwords', JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
         await fetch("http://localhost:3000/", {
             method: 'POST',
@@ -104,7 +106,8 @@ const Manager = () => {
     }
     const editPassword = (id) => {
 
-        setform({...passwordArray.find((item) => item.id === id),
+        setform({
+            ...passwordArray.find((item) => item.id === id),
             id: id // keep the id same for editing
         })
         setPasswordArray(passwordArray.filter((item) => item.id !== id))
